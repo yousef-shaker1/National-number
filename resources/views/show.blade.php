@@ -145,6 +145,32 @@
                             هو: {{ $years }} سنة، {{ $months }} شهر، {{ $days }} يوم
                         </td>
                     </tr>
+                    <td>باقي كام يوم علي عيد ميلادك: </td>
+                        <td>
+                            <?php
+                                $day = $day;
+                                $month = $zeroday == 0 ? "0$month" : $month;
+
+                                $birthDate = new DateTime("$year-$month-$day");
+                                $today = new DateTime();
+                                
+                                // تحديد عيد الميلاد القادم
+                                $currentYear = $today->format('Y');
+                                $nextBirthday = new DateTime("$currentYear-$month-$day");
+
+                                // إذا كان عيد الميلاد قد مرّ هذه السنة، نحدده للسنة القادمة
+                                if ($nextBirthday < $today) {
+                                    $nextBirthday->modify('+1 month');
+                                }
+
+                                // حساب الفرق بين اليوم وعيد الميلاد القادم
+                                $interval = $today->diff($nextBirthday);
+                                $monthsLeft = $interval->m;
+                                $daysLeft = $interval->d;
+                                $scondsLeft = $interval->s;
+                            ?>
+                            هو: {{ $monthsLeft }} شهر، {{ $daysLeft }} يوم
+                        </td>
                 </tbody>
             </table>
         </div>
