@@ -38,8 +38,8 @@
             <h4 class="mb-0">تفاصيل الرقم القومي</h4>
         </div>
         <div class="card-body">
-            <label for="number">الرقم القومي</label>
-            <input type="text" id="number" class="form-control mb-3" value="{{ $number }}" readonly>
+            {{-- <label for="number">الرقم القومي</label>
+            <input type="text" id="number" class="form-control mb-3" value="{{ $number }}" readonly> --}}
 
             <table class="table table-bordered table-striped">
                 <thead>
@@ -129,48 +129,66 @@
                     <tr>
                         <td>العمر: </td>
                         <td>
-                            <?php
-                                $day = $day;
-                                $month = $zeroday == 0 ? "0$month" : $month;
-                                $year = $first == 2 ? ($zero == 0 ? "19$zero$year" : "19$four") : ($zero == 0 ? "20$zero$year" : "20$four");
+                                <?php
+                                    $day = $day;
+                                    $month = $zeroday == 0 ? "0$month" : $month;
+                                    $year = $first == 2 ? ($zero == 0 ? "19$zero$year" : "19$four") : ($zero == 0 ? "20$zero$year" : "20$four");
 
-                                $birthDate = new DateTime("$year-$month-$day");
-                                $today = new DateTime();
-                                $interval = $today->diff($birthDate);
+                                    $birthDate = new DateTime("$year-$month-$day");
+                                    $today = new DateTime();
+                                    $interval = $today->diff($birthDate);
 
-                                $years = $interval->y;
-                                $months = $interval->m;
-                                $days = $interval->d;
-                            ?>
+                                    $years = $interval->y;
+                                    $months = $interval->m;
+                                    $days = $interval->d;
+                                ?>
+
+                                <?php
+
+    // تاريخ الميلاد
+    $birthDate = new DateTime("$year-$month-$day");
+$today = new DateTime();
+
+// عيد الميلاد الجاي
+$nextBirthday = new DateTime($today->format('Y') . "-$month-$day");
+
+if ($nextBirthday < $today) {
+    $nextBirthday->modify('+1 year');
+}
+
+// الفرق بالأيام فقط
+$interval = $today->diff($nextBirthday);
+$daysLeft = $interval->days;
+    $monthsLeft = $interval->m;
+    $daysLeft   = $interval->d;
+    ?>
+
                             هو: {{ $years }} سنة، {{ $months }} شهر، {{ $days }} يوم
                         </td>
                     </tr>
                     <td>باقي كام يوم علي عيد ميلادك: </td>
-                        <td>
-                            <?php
-                                $day = $day;
-                                $month = $zeroday == 0 ? "0$month" : $month;
+            
+    <td>
+        @php
+    $today = new DateTime('2025-12-23');
+    $nextBirthday = new DateTime('2026-03-23');
 
-                                $birthDate = new DateTime("$year-$month-$day");
-                                $today = new DateTime();
-                                
-                                // تحديد عيد الميلاد القادم
-                                $currentYear = $today->format('Y');
-                                $nextBirthday = new DateTime("$currentYear-$month-$day");
+    $interval = $today->diff($nextBirthday);
 
-                                // إذا كان عيد الميلاد قد مرّ هذه السنة، نحدده للسنة القادمة
-                                if ($nextBirthday < $today) {
-                                    $nextBirthday->modify('+1 month');
-                                }
+    // الأيام الكلية
+    $totalDaysLeft = $interval->days;
 
-                                // حساب الفرق بين اليوم وعيد الميلاد القادم
-                                $interval = $today->diff($nextBirthday);
-                                $monthsLeft = $interval->m;
-                                $daysLeft = $interval->d;
-                                $scondsLeft = $interval->s;
-                            ?>
-                            هو: {{ $monthsLeft }} شهر، {{ $daysLeft }} يوم
-                        </td>
+    // تحويل بشري
+    $monthsLeft = floor($totalDaysLeft / 30);
+    $daysLeft   = $totalDaysLeft % 30;
+@endphp
+
+
+
+هو: {{ $monthsLeft }} شهر، {{ $daysLeft }} يوم
+
+    </td>
+</tr>
                 </tbody>
             </table>
         </div>
